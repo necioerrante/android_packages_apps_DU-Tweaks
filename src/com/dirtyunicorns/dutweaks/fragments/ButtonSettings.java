@@ -190,7 +190,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
         mKeysAppSwitchCategory =
                 (PreferenceCategory) prefScreen.findPreference(CATEGORY_APPSWITCH);
         mKeysCameraCategory =
-                (PreferenceCategory) prefs.findPreference(CATEGORY_CAMERA);
+                (PreferenceCategory) prefScreen.findPreference(CATEGORY_CAMERA);
 
         if (!res.getBoolean(R.bool.config_has_hardware_buttons)) {
             prefScreen.removePreference(keysCategory);
@@ -225,11 +225,11 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
                     KEYS_APP_SWITCH_PRESS);
             mAppSwitchLongPressAction = (ListPreference) prefScreen.findPreference(
                     KEYS_APP_SWITCH_LONG_PRESS);
-            mCameraWake = (CheckBoxPreference) prefs.findPreference(
+            mCameraWake = (CheckBoxPreference) prefScreen.findPreference(
                     KEYS_CAMERA_WAKE);
-            mCameraSleepOnRelease = (CheckBoxPreference) prefs.findPreference(
+            mCameraSleepOnRelease = (CheckBoxPreference) prefScreen.findPreference(
                     KEYS_CAMERA_PEAK);
-            mCameraMusicControls = (CheckBoxPreference) prefs.findPreference(
+            mCameraMusicControls = (CheckBoxPreference) prefScreen.findPreference(
                     KEYS_CAMERA_MUSIC);
 
             if (hasBackKey) {
@@ -374,11 +374,11 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
 
             if (hasCameraKey) {
                 mCameraWake = (CheckBoxPreference)
-                    prefs.findPreference(Settings.System.CAMERA_WAKE_SCREEN);
+                    prefScreen.findPreference(Settings.System.CAMERA_WAKE_SCREEN);
                 mCameraSleepOnRelease = (CheckBoxPreference)
-                    prefs.findPreference(Settings.System.CAMERA_SLEEP_ON_RELEASE);
+                    prefScreen.findPreference(Settings.System.CAMERA_SLEEP_ON_RELEASE);
                 mCameraMusicControls = (CheckBoxPreference)
-                    prefs.findPreference(Settings.System.CAMERA_MUSIC_CONTROLS);
+                    prefScreen.findPreference(Settings.System.CAMERA_MUSIC_CONTROLS);
                 boolean value = mCameraWake.isChecked();
                 mCameraMusicControls.setEnabled(!value);
                 mCameraSleepOnRelease.setEnabled(value);
