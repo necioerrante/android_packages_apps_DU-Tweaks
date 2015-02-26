@@ -160,6 +160,8 @@
     <string name="no_home_key">You have no button assigned to the \"Home\" action! This can make your device unusable!</string>
     <string name="keys_action_sleep">Go to sleep</string>
     <string name="keys_action_omniswitch">OmniSwitch recents</string>
+
+    <!-- Camera Button bring-up -->
     <string name="keys_camera_title">Camera key</string>
     <string name="camera_wake_summary">Pressing the camera button will wake your device</string>
     <string name="keys_camera_peak_title">Screen peek</string>
@@ -223,6 +225,7 @@
     <string name="enable_clock_weekday_summary">Abbreviated day of the week before the time</string>
     <string name="right_clock">Right clock</string>
     <string name="center_clock">Center clock</string>
+    <string name="left_clock">Left clock</string>
     <string name="dont_show">Don\'t show</string>
     <string name="clock_date_display">Date</string>
     <string name="clock_date_display_summary">Display custom date before the clock</string>
@@ -440,5 +443,18 @@
     <!-- Double Tap Statusbar to Sleep -->
     <string name="double_tap_to_sleep_title">DT2S on Statusbar</string>
     <string name="double_tap_to_sleep_summary">Double tap status bar to put the device to sleep</string>
+
+    <!-- Show carrier label and custom -->
+    <string name="carrier_options">Carrier Label</string>
+    <string name="show_status_bar_carrier_title">Status bar carrier</string>
+    <string name="show_status_bar_carrier_summary">Show carrier in status bar</string>
+    <string name="custom_carrier_label_title">Custom carrier label</string>
+    <string name="custom_carrier_label_explain">Please enter a new label. Leave blank to revert to stock label.</string>
+    <string name="custom_carrier_label_notset">Custom label currently not set</string>
+    <string name="status_bar_carrier_color">Carrier label color</string>
+
+    <!-- Location QS advanced options -->
+    <string name="qs_advanced_location_title">Advanced location quick settings</string>
+    <string name="qs_advanced_location_summary">Enable advanced settings for location in quick settings</string>
 
 </resources>

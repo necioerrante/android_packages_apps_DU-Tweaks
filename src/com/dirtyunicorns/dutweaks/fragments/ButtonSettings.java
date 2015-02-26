@@ -109,6 +109,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private static final int ACTION_KILL_APP = 9;
     private static final int ACTION_SLEEP = 10;
     private static final int ACTION_OMNISWITCH = 11;
+    private static final int ACTION_CAMERA = 12;
 
     // Masks for checking presence of hardware keys.
     // Must match values in frameworks/base/core/res/res/values/config.xml
@@ -117,7 +118,9 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private static final int KEY_MASK_MENU = 0x04;
     private static final int KEY_MASK_ASSIST = 0x08;
     private static final int KEY_MASK_APP_SWITCH = 0x10;
-    private static final int KEY_MASK_CAMERA     = 0x20;
+
+    private static final int KEY_MASK_CAMERA = 0x20;
+
 
     private SwitchPreference mVolumeRockerWake;
     private SwitchPreference mVolumeRockerMusicControl;
@@ -140,9 +143,12 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private PreferenceCategory mKeysMenuCategory;
     private PreferenceCategory mKeysAppSwitchCategory;
     private PreferenceCategory mKeysAssistCategory;
-    private CheckBoxPreference mCameraWake;
-    private CheckBoxPreference mCameraSleepOnRelease;
-    private CheckBoxPreference mCameraMusicControls;
+
+    private PreferenceCategory mKeysCameraCategory;
+    private SwitchPreference mCameraWake;
+    private SwitchPreference mCameraSleepOnRelease;
+    private SwitchPreference mCameraMusicControls;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -225,11 +231,12 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
                     KEYS_APP_SWITCH_PRESS);
             mAppSwitchLongPressAction = (ListPreference) prefScreen.findPreference(
                     KEYS_APP_SWITCH_LONG_PRESS);
-            mCameraWake = (CheckBoxPreference) prefScreen.findPreference(
+
+            mCameraWake = (SwitchPreference) prefScreen.findPreference(
                     KEYS_CAMERA_WAKE);
-            mCameraSleepOnRelease = (CheckBoxPreference) prefScreen.findPreference(
+            mCameraSleepOnRelease = (SwitchPreference) prefScreen.findPreference(
                     KEYS_CAMERA_PEAK);
-            mCameraMusicControls = (CheckBoxPreference) prefScreen.findPreference(
+            mCameraMusicControls = (SwitchPreference) prefScreen.findPreference(
                     KEYS_CAMERA_MUSIC);
 
             if (hasBackKey) {
@@ -373,20 +380,27 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
             }
 
             if (hasCameraKey) {
-                mCameraWake = (CheckBoxPreference)
-                    prefScreen.findPreference(Settings.System.CAMERA_WAKE_SCREEN);
-                mCameraSleepOnRelease = (CheckBoxPreference)
-                    prefScreen.findPreference(Settings.System.CAMERA_SLEEP_ON_RELEASE);
-                mCameraMusicControls = (CheckBoxPreference)
-                    prefScreen.findPreference(Settings.System.CAMERA_MUSIC_CONTROLS);
-                boolean value = mCameraWake.isChecked();
-                mCameraMusicControls.setEnabled(!value);
-                mCameraSleepOnRelease.setEnabled(value);
+                mCameraWake = (SwitchPreference) findPreference(Settings.System.CAMERA_WAKE_SCREEN);
+                mCameraWake.setOnPreferenceChangeListener(this);
+                int cameraWake = Settings.System.getInt(getContentResolver(),
+                        Settings.System.CAMERA_WAKE_SCREEN, 0);
+                mCameraWake.setChecked(cameraWake != 0);
 
-                if (!res.getBoolean(R.bool.has_camera_key)) {
-                    prefScreen.removePreference(keysCameraCategory);
-               }
-           }
+                mCameraSleepOnRelease = (SwitchPreference) findPreference(Settings.System.CAMERA_SLEEP_ON_RELEASE);
+                mCameraSleepOnRelease.setOnPreferenceChangeListener(this);
+                int cameraSleepOnRelease = Settings.System.getInt(getContentResolver(),
+                        Settings.System.CAMERA_SLEEP_ON_RELEASE, 0);
+                mCameraSleepOnRelease.setChecked(cameraSleepOnRelease != 0);
+
+                mCameraMusicControls = (SwitchPreference) findPreference(Settings.System.CAMERA_MUSIC_CONTROLS);
+                mCameraMusicControls.setOnPreferenceChangeListener(this);
+                int cameraMusicControls = Settings.System.getInt(getContentResolver(),
+                        Settings.System.CAMERA_MUSIC_CONTROLS, 0);
+                mCameraMusicControls.setChecked(cameraMusicControls != 0);
+
+            } else {
+                prefScreen.removePreference(mKeysCameraCategory);
+            }
 
             mEnableCustomBindings.setChecked((Settings.System.getInt(resolver,
                     Settings.System.HARDWARE_KEY_REBINDING, 0) == 1));
@@ -406,7 +420,22 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
             Settings.System.putInt(getContentResolver(), Settings.System.HARDWARE_KEY_REBINDING,
                     value ? 1 : 0);
             return true;
-        } else if (preference == mVolumeRockerWake) {
+        } else if (preference == mCameraWake) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.CAMERA_WAKE_SCREEN,
+                    value ? 1 : 0);
+            return true;
+        } else if (preference == mCameraMusicControls) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.CAMERA_MUSIC_CONTROLS,
+                    value ? 1 : 0);
+            return true;
+        }  else if (preference == mCameraSleepOnRelease) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.CAMERA_SLEEP_ON_RELEASE,
+                    value ? 1 : 0);
+            return true;
+        }  else if (preference == mVolumeRockerWake) {
             boolean value = (Boolean) newValue;
             Settings.System.putInt(getContentResolver(), VOLUME_ROCKER_WAKE,
                     value ? 1 : 0);
