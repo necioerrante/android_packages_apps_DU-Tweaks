@@ -71,6 +71,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private static final String CATEGORY_MENU = "button_keys_menu";
     private static final String CATEGORY_ASSIST = "button_keys_assist";
     private static final String CATEGORY_APPSWITCH = "button_keys_appSwitch";
+    private static final String CATEGORY_CAMERA = "button_keys_camera";
 
     // volume rocker wake
     private static final String VOLUME_ROCKER_WAKE = "volume_rocker_wake";
@@ -92,6 +93,9 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private static final String KEYS_ASSIST_LONG_PRESS = "keys_assist_long_press";
     private static final String KEYS_APP_SWITCH_PRESS = "keys_app_switch_press";
     private static final String KEYS_APP_SWITCH_LONG_PRESS = "keys_app_switch_long_press";
+    private static final String KEYS_CAMERA_WAKE  = "camera_wake_screen";
+    private static final String KEYS_CAMERA_SLEEP = "camera_sleep_on_release";
+    private static final String KEYS_CAMERA_LAUNCH = "camera_launch";
 
     // Available custom actions to perform on a key press.
     private static final int ACTION_NOTHING = 0;
@@ -114,6 +118,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private static final int KEY_MASK_MENU = 0x04;
     private static final int KEY_MASK_ASSIST = 0x08;
     private static final int KEY_MASK_APP_SWITCH = 0x10;
+    private static final int KEY_MASK_CAMERA = 0x20;
 
     private SwitchPreference mVolumeRockerWake;
     private SwitchPreference mVolumeRockerMusicControl;
@@ -130,6 +135,9 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private ListPreference mAssistLongPressAction;
     private ListPreference mAppSwitchPressAction;
     private ListPreference mAppSwitchLongPressAction;
+    private SwitchPreference mCameraWakeScreen;
+    private SwitchPreference mCameraSleepOnRelease;
+    private SwitchPreference mCameraLaunch;
     private Map<String, Integer> mKeySettings = new HashMap<String, Integer>();
     private PreferenceScreen mButtonBrightness;
     private PreferenceCategory mKeysBackCategory;
@@ -137,6 +145,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
     private PreferenceCategory mKeysMenuCategory;
     private PreferenceCategory mKeysAppSwitchCategory;
     private PreferenceCategory mKeysAssistCategory;
+    private PreferenceCategory mKeysCameraCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,7 +177,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
         int swapVolumeButtons = Settings.System.getInt(getContentResolver(),
                 SWAP_VOLUME_BUTTONS, 0);
         mSwapVolumeButtons.setChecked(swapVolumeButtons != 0);
-
+        
         final int deviceKeys = getResources().getInteger(
                 com.android.internal.R.integer.config_deviceHardwareKeys);
         final boolean hasBackKey = (deviceKeys & KEY_MASK_BACK) != 0;
@@ -176,6 +185,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
         final boolean hasMenuKey = (deviceKeys & KEY_MASK_MENU) != 0;
         final boolean hasAssistKey = (deviceKeys & KEY_MASK_ASSIST) != 0;
         final boolean hasAppSwitchKey = (deviceKeys & KEY_MASK_APP_SWITCH) != 0;
+        final boolean hasCameraKey = (deviceKeys & KEY_MASK_CAMERA) != 0;
 
         final PreferenceCategory keysCategory =
                 (PreferenceCategory) prefScreen.findPreference(CATEGORY_KEYS);
@@ -189,6 +199,8 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
                 (PreferenceCategory) prefScreen.findPreference(CATEGORY_ASSIST);
         mKeysAppSwitchCategory =
                 (PreferenceCategory) prefScreen.findPreference(CATEGORY_APPSWITCH);
+        mKeysCameraCategory =
+                (PreferenceCategory) prefScreen.findPreference(CATEGORY_CAMERA);
 
         if (!res.getBoolean(R.bool.config_has_hardware_buttons)) {
             prefScreen.removePreference(keysCategory);
@@ -197,6 +209,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
             prefScreen.removePreference(mKeysMenuCategory);
             prefScreen.removePreference(mKeysAssistCategory);
             prefScreen.removePreference(mKeysAppSwitchCategory);
+            prefScreen.removePreference(mKeysCameraCategory);
         } else {
             mEnableCustomBindings = (SwitchPreference) prefScreen.findPreference(
                     KEYS_ENABLE_CUSTOM);
@@ -222,6 +235,12 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
                     KEYS_APP_SWITCH_PRESS);
             mAppSwitchLongPressAction = (ListPreference) prefScreen.findPreference(
                     KEYS_APP_SWITCH_LONG_PRESS);
+            mCameraWakeScreen = (SwitchPreference) prefScreen.findPreference(
+                    KEYS_CAMERA_WAKE);
+            mCameraSleepOnRelease = (SwitchPreference) prefScreen.findPreference(
+                    KEYS_CAMERA_SLEEP);
+            mCameraLaunch = (SwitchPreference) prefScreen.findPreference(
+                    KEYS_CAMERA_LAUNCH);
 
             if (hasBackKey) {
                 int backPressAction = Settings.System.getInt(resolver,
@@ -362,6 +381,31 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
             } else {
                 prefScreen.removePreference(mKeysAppSwitchCategory);
             }
+            
+            if (hasCameraKey) {
+				int CameraWake = Settings.System.getInt(resolver,
+                        Settings.System.CAMERA_WAKE_SCREEN, 0);
+                mCameraWakeScreen.setChecked(CameraWake != 0);
+                mCameraWakeScreen.setOnPreferenceChangeListener(this);
+
+                mKeySettings.put(Settings.System.CAMERA_WAKE_SCREEN, CameraWake);
+
+                int CameraSleep = Settings.System.getInt(resolver,
+                        Settings.System.CAMERA_SLEEP_ON_RELEASE, 0);
+                mCameraSleepOnRelease.setChecked(CameraSleep != 0);
+                mCameraSleepOnRelease.setOnPreferenceChangeListener(this);
+
+                mKeySettings.put(Settings.System.CAMERA_SLEEP_ON_RELEASE, CameraSleep);
+                
+                int CameraLaunch = Settings.System.getInt(resolver,
+                        Settings.System.CAMERA_LAUNCH, 0);
+                mCameraLaunch.setChecked(CameraLaunch != 0);
+                mCameraLaunch.setOnPreferenceChangeListener(this);
+
+                mKeySettings.put(Settings.System.CAMERA_LAUNCH, CameraLaunch);
+            } else {
+                prefScreen.removePreference(mKeysCameraCategory);
+            }
 
             mEnableCustomBindings.setChecked((Settings.System.getInt(resolver,
                     Settings.System.HARDWARE_KEY_REBINDING, 0) == 1));
@@ -394,6 +438,21 @@ public class ButtonSettings extends SettingsPreferenceFragment implements OnPref
         } else if (preference == mSwapVolumeButtons) {
             boolean value = (Boolean) newValue;
             Settings.System.putInt(getContentResolver(), SWAP_VOLUME_BUTTONS,
+                    value ? 1 : 0);
+            return true;
+        } else if (preference == mCameraWakeScreen) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.CAMERA_WAKE_SCREEN,
+                    value ? 1 : 0);
+            return true;
+        } else if (preference == mCameraSleepOnRelease) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.CAMERA_SLEEP_ON_RELEASE,
+                    value ? 1 : 0);
+            return true;
+        } else if (preference == mCameraLaunch) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(), Settings.System.CAMERA_LAUNCH,
                     value ? 1 : 0);
             return true;
         } else if (preference == mBackPressAction) {

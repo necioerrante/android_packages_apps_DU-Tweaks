@@ -172,6 +172,15 @@
     <string name="no_home_key">You have no button assigned to the \"Home\" action! This can make your device unusable!</string>
     <string name="keys_action_sleep">Go to sleep</string>
     <string name="keys_action_omniswitch">OmniSwitch recents</string>
+    
+    <!-- Camera Button Wake and Launch -->
+    <string name="button_keys_camera_title">Camera Key</string>
+    <string name="camera_wake_title">Wake on Camera key</string>
+    <string name="camera_wake_summary">Wake Screen on Camera key press</string>
+    <string name="camera_sleep_on_release_title">Sleep on Release Camera key</string>
+    <string name="camera_sleep_on_release_summary">Go back to sleep on Camera key release</string>
+    <string name="camera_launch_title">Launch Camera</string>
+    <string name="camera_launch_summary">Launch Camera on key long press</string>
 
     <!-- Status bar brightness control -->
     <string name="status_bar_brightness_control_title">Brightness control</string>
