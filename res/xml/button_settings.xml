@@ -185,7 +185,6 @@
             android:dependency="keys_enable_custom" />
     </PreferenceCategory>
     
-
     <PreferenceCategory
         android:key="button_keys_camera"
         android:title="@string/button_keys_camera_title">
