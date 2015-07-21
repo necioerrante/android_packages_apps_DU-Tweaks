@@ -51,6 +51,30 @@
         android:summary="@string/swap_volume_buttons_summary" />
 
     <PreferenceCategory
+        android:key="button_keys_camera"
+        android:title="@string/button_keys_camera_title">
+
+        <SwitchPreference
+            android:key="camera_wake_screen"
+            android:title="@string/camera_wake_title"
+            android:summary="@string/camera_wake_summary"
+            android:defaultValue="false" />
+
+        <SwitchPreference
+            android:key="camera_sleep_on_release"
+            android:title="@string/camera_sleep_on_release_title"
+            android:summary="@string/camera_sleep_on_release_summary"
+            android:defaultValue="false"
+            android:dependency="camera_wake_screen" />
+
+        <SwitchPreference
+            android:key="camera_launch"
+            android:title="@string/camera_launch_title"
+            android:summary="@string/camera_launch_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory
         android:key="button_keys"
         android:title="@string/button_keys_title" >
 
@@ -182,32 +206,6 @@
             android:entries="@array/keys_action_entries"
             android:entryValues="@array/keys_action_values"
             android:persistent="false"
-            android:dependency="keys_enable_custom" />
-    </PreferenceCategory>
-    
-    <PreferenceCategory
-        android:key="button_keys_camera"
-        android:title="@string/button_keys_camera_title">
-
-        <SwitchPreference
-            android:key="camera_wake_screen"
-            android:title="@string/camera_wake_title"
-            android:summary="@string/camera_wake_summary"
-            android:defaultValue="false"
-            android:dependency="keys_enable_custom" />
-
-        <SwitchPreference
-            android:key="camera_sleep_on_release"
-            android:title="@string/camera_sleep_on_release_title"
-            android:summary="@string/camera_sleep_on_release_summary"
-            android:defaultValue="false"
-            android:dependency="camera_wake_screen" />
-
-        <SwitchPreference
-            android:key="camera_launch"
-            android:title="@string/camera_launch_title"
-            android:summary="@string/camera_launch_summary"
-            android:defaultValue="false"
             android:dependency="keys_enable_custom" />
     </PreferenceCategory>
     
